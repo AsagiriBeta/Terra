@@ -28,6 +28,7 @@ import com.dfsek.terra.api.entity.EntityType;
 import com.dfsek.terra.api.handle.WorldHandle;
 import com.dfsek.terra.bukkit.util.BukkitUtils;
 import com.dfsek.terra.bukkit.world.block.data.BukkitBlockState;
+import com.dfsek.terra.util.BlockStateStringUtil;
 
 
 public class BukkitWorldHandle implements WorldHandle {
@@ -40,8 +41,10 @@ public class BukkitWorldHandle implements WorldHandle {
 
     @Override
     public synchronized @NotNull BlockState createBlockState(@NotNull String data) {
+        // Paper 1.21.11's BlockData parser rejects SNBT block-entity payloads such as
+        // minecraft:chest{LootTable:'chests/simple_dungeon'} ("Spurious trailing data").
         org.bukkit.block.data.BlockData bukkitData = Bukkit.createBlockData(
-            data); // somehow bukkit managed to make this not thread safe! :)
+            BlockStateStringUtil.stripBlockEntityNbt(data)); // somehow bukkit managed to make this not thread safe! :)
         return BukkitBlockState.newInstance(bukkitData);
     }
 
