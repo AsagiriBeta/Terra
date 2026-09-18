@@ -9,6 +9,7 @@ import java.util.Locale;
 
 import com.dfsek.terra.api.entity.EntityType;
 import com.dfsek.terra.bukkit.world.entity.BukkitEntityType;
+import com.dfsek.terra.util.BlockStateStringUtil;
 
 
 public class BukkitUtils {
@@ -20,8 +21,11 @@ public class BukkitUtils {
     }
 
     public static EntityType getEntityType(String id) {
-        if(!id.startsWith("minecraft:")) throw new IllegalArgumentException("Invalid entity identifier " + id);
-        String entityID = id.toUpperCase(Locale.ROOT).substring(10);
+        // Paper 1.21.11 EntityType.valueOf rejects SNBT payloads such as
+        // minecraft:end_crystal{SHOWBOTTOM:0}.
+        String normalized = BlockStateStringUtil.stripBlockEntityNbt(id);
+        if(!normalized.startsWith("minecraft:")) throw new IllegalArgumentException("Invalid entity identifier " + id);
+        String entityID = normalized.toUpperCase(Locale.ROOT).substring(10);
 
         return new BukkitEntityType(switch(entityID) {
             case "END_CRYSTAL" -> org.bukkit.entity.EntityType.END_CRYSTAL;

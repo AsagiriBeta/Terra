@@ -43,4 +43,10 @@ public class BlockStateStringUtilTest {
         assertEquals("minecraft:stone", BlockStateStringUtil.stripBlockEntityNbt("minecraft:stone"));
         assertEquals("minecraft:oak_log[axis=y]", BlockStateStringUtil.stripBlockEntityNbt("minecraft:oak_log[axis=y]"));
     }
+
+    @Test
+    public void stripsEntityNbtPayloads() {
+        assertEquals("minecraft:end_crystal",
+            BlockStateStringUtil.stripBlockEntityNbt("minecraft:end_crystal{SHOWBOTTOM:0}"));
+    }
 }
