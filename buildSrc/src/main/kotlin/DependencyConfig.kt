@@ -36,20 +36,11 @@ fun Project.configureDependencies() {
         maven("https://maven.solo-studios.ca/snapshots") {
             name = "Solo Studios"
         }
-        maven("https://maven.fabricmc.net/") {
-            name = "FabricMC"
-        }
         maven("https://repo.codemc.org/repository/maven-public") {
             name = "CodeMC"
         }
         maven("https://repo.papermc.io/repository/maven-public/") {
             name = "PaperMC"
-        }
-        maven("https://files.minecraftforge.net/maven/") {
-            name = "Forge"
-        }
-        maven("https://maven.quiltmc.org/repository/release/") {
-            name = "Quilt"
         }
         maven("https://jitpack.io") {
             name = "JitPack"

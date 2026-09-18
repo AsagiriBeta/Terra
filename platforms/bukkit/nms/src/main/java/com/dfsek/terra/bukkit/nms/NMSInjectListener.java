@@ -27,10 +27,15 @@ public class NMSInjectListener implements Listener {
 
     @EventHandler
     public void onWorldInit(WorldInitEvent event) {
-        if(!INJECTED.contains(event.getWorld()) &&
-           event.getWorld().getGenerator() instanceof BukkitChunkGeneratorWrapper bukkitChunkGeneratorWrapper) {
-            INJECT_LOCK.lock();
-            INJECTED.add(event.getWorld());
+        if(!(event.getWorld().getGenerator() instanceof BukkitChunkGeneratorWrapper bukkitChunkGeneratorWrapper)) {
+            return;
+        }
+
+        INJECT_LOCK.lock();
+        try {
+            if(!INJECTED.add(event.getWorld())) {
+                return;
+            }
             LOGGER.info("Preparing to take over the world: {}", event.getWorld().getName());
             CraftWorld craftWorld = (CraftWorld) event.getWorld();
             ServerLevel serverWorld = craftWorld.getHandle();
@@ -51,7 +56,10 @@ public class NMSInjectListener implements Listener {
             ));
 
             LOGGER.info("Successfully injected into world.");
-
+        } catch(RuntimeException e) {
+            INJECTED.remove(event.getWorld());
+            throw e;
+        } finally {
             INJECT_LOCK.unlock();
         }
     }
