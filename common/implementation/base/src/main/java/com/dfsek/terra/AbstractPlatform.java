@@ -77,6 +77,7 @@ import com.dfsek.terra.registry.OpenRegistryImpl;
 import com.dfsek.terra.registry.master.ConfigRegistry;
 import com.dfsek.terra.registry.master.ConfigRegistry.PackLoadFailuresException;
 import com.dfsek.terra.registry.master.MetaConfigRegistry;
+import com.dfsek.terra.util.NativeLibraryWarmup;
 
 
 /**
@@ -158,6 +159,8 @@ public abstract class AbstractPlatform implements Platform {
                 "implementation, or a misbehaving mod.");
         }
         LOADED.set(true);
+
+        NativeLibraryWarmup.warmup();
 
         logger.info("Initializing Terra...");
 
