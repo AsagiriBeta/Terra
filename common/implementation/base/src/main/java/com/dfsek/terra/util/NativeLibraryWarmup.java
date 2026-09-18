@@ -39,7 +39,11 @@ public final class NativeLibraryWarmup {
     public static void warmup() {
         ClassLoader previous = Thread.currentThread().getContextClassLoader();
         try {
-            Thread.currentThread().setContextClassLoader(ClassLoader.getPlatformClassLoader());
+            ClassLoader loader = ClassLoader.getSystemClassLoader();
+            if(loader == null) {
+                loader = ClassLoader.getPlatformClassLoader();
+            }
+            Thread.currentThread().setContextClassLoader(loader);
             RandomGenerator.getDefault();
             Class.forName("com.dfsek.seismic.math.trigonometry.TrigonometryUtils");
             Class.forName("com.dfsek.paralithic.functions.natives.NativeMath");
