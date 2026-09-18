@@ -31,34 +31,6 @@ object Versions {
         }
     }
     
-    object Fabric {
-        const val fabricAPI = "0.134.1+${Mod.minecraft}"
-        const val cloud = "2.0.0-beta.13"
-    }
-//
-//    object Quilt {
-//        const val quiltLoader = "0.20.2"
-//        const val fabricApi = "7.3.1+0.89.3-1.20.1"
-//    }
-    
-    object Mod {
-        const val mixin = "0.16.4+mixin.0.8.7"
-        const val mixinExtras = "0.5.0"
-        
-        const val minecraft = "1.21.10"
-        const val yarn = "$minecraft+build.1"
-        const val fabricLoader = "0.18.2"
-        
-        const val architecuryLoom = "1.11.451"
-        const val architecturyPlugin = "3.4.162"
-
-    }
-//
-//    object Forge {
-//        const val forge = "${Mod.minecraft}-48.0.13"
-//        const val burningwave = "12.63.0"
-//    }
-    
     object Bukkit {
         const val minecraft = "1.21.11"
         const val nms = "$minecraft-R0.1"
@@ -73,29 +45,8 @@ object Versions {
         const val multiverse = "5.3.0"
     }
     
-//
-//    object Sponge {
-//        const val sponge = "9.0.0-SNAPSHOT"
-//        const val mixin = "0.8.2"
-//        const val minecraft = "1.17.1"
-//    }
-//
     object CLI {
         const val logback = "1.5.19"
         const val picocli = "4.7.7"
-    }
-    
-    object Allay {
-        const val api = "0.20.0"
-        const val gson = "2.13.2"
-        
-        const val mappings = "366baa6"
-        const val mappingsGenerator = "e957088"
-        
-        const val mcmeta = "c976eb3"
-    }
-    
-    object Minestom {
-        const val minestom = "2025.10.04-1.21.8"
     }
 }

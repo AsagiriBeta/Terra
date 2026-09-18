@@ -21,7 +21,6 @@ includeImmediateChildren(file("platforms"), "platform")
 includeImmediateChildren(file("platforms/bukkit/nms"), "Bukkit NMS")
 
 include(":platforms:bukkit:common")
-include(":platforms:minestom:example")
 
 pluginManagement {
     repositories {
@@ -32,24 +31,13 @@ pluginManagement {
         maven("https://maven.solo-studios.ca/snapshots") {
             name = "Solo Studios"
         }
-        maven("https://maven.fabricmc.net") {
-            name = "Fabric Maven"
-        }
-        maven("https://maven.architectury.dev/") {
-            name = "Architectury Maven"
-        }
-        maven("https://files.minecraftforge.net/maven/") {
-            name = "Forge Maven"
-        }
-        maven("https://maven.quiltmc.org/repository/release/") {
-            name = "Quilt"
+        maven("https://repo.papermc.io/repository/maven-public/") {
+            name = "PaperMC"
         }
     }
 }
 
-// settings.gradle.kts
 val isCiServer = System.getenv().containsKey("CI")
-// Cache build artifacts, so expensive operations do not need to be re-computed
 buildCache {
     local {
         isEnabled = !isCiServer

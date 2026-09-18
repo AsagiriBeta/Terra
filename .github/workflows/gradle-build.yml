@@ -1,47 +1,59 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-# This workflow will build a package using Gradle and then publish it to GitHub packages when a release is created
-# For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#Publishing-using-gradle
+name: Build and Release
 
-name: Gradle Build
+on:
+  push:
+    branches:
+      - master
 
-on: [ pull_request ]
+concurrency:
+  group: bukkit-release
+  cancel-in-progress: false
+
+permissions:
+  contents: write
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-
     steps:
-      - uses: actions/checkout@v4.2.2
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Set up JDK 21
-        uses: actions/setup-java@v4.7.1
+        uses: actions/setup-java@v4
         with:
           java-version: '21'
-          distribution: 'temurin'
-          server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
-          settings-path: ${{ github.workspace }} # location for the settings.xml file
+          distribution: temurin
+          cache: gradle
 
-      - uses: burrunan/gradle-cache-action@v3.0.1
-        name: Build Terra
+      - name: Test and build Bukkit plugin
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon :common:implementation:base:test :platforms:bukkit:shadowJar
+
+      - name: Locate shaded JAR
+        id: jar
+        run: |
+          JAR=$(ls platforms/bukkit/build/libs/*-shaded.jar | head -n 1)
+          echo "path=$JAR" >> "$GITHUB_OUTPUT"
+          echo "name=$(basename "$JAR")" >> "$GITHUB_OUTPUT"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         with:
-          # Specifies arguments for Gradle execution
-          # If arguments is missing or empty, then Gradle is not executed
-          arguments: build
-          # arguments can be multi-line for better readability
-          # arguments: |
-          #  --no-paralell
-          #  build
-          #  -x test
-          # Gradle version to use for execution:
-          #   wrapper (default), current, rc, nightly, release-nightly, or
-          #   versions like 6.6 (see https://services.gradle.org/versions/all)
-          gradle-version: wrapper
-          # Properties are passed as -Pname=value
-          properties: |
-            kotlin.js.compiler=ir
-            kotlin.parallel.tasks.in.project=true
+          name: Terra-bukkit
+          path: ${{ steps.jar.outputs.path }}
+          if-no-files-found: error
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="bukkit-${{ github.run_number }}"
+          NOTES="$(git log -1 --pretty=%B | head -c 4000)"
+          gh release create "$TAG" "${{ steps.jar.outputs.path }}" \
+            --title "Terra Bukkit ${{ github.run_number }}" \
+            --notes "$NOTES" \
+            --latest

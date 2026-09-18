@@ -46,7 +46,8 @@ public class MetaConfigRegistry extends OpenRegistryImpl<MetaPack> {
         Files.createDirectories(packsDirectory);
         List<IOException> failedLoads = new ArrayList<>();
         try(Stream<Path> packs = Files.list(packsDirectory)) {
-            packs.forEach(path -> {
+            packs.filter(path -> Files.isDirectory(path) || path.getFileName().toString().endsWith(".zip"))
+                .forEach(path -> {
                 try {
                     MetaPack pack = new MetaPackImpl(path, platform, configRegistry);
                     registerChecked(pack.getRegistryKey(), pack);

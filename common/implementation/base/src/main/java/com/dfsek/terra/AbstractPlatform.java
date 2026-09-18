@@ -233,7 +233,7 @@ public abstract class AbstractPlatform implements Platform {
             logger.error("Failed to load meta config packs", e);
             return false;
         } catch(PackLoadFailuresException e) {
-            e.getExceptions().forEach(ex -> logger.error("Failed to meta load config pack", ex));
+            e.getExceptions().forEach(ex -> logger.error("Failed to load meta config pack", ex));
             return false;
         }
         return true;

@@ -6,6 +6,7 @@ import java.net.URL
 import java.nio.file.FileSystems
 import java.nio.file.Path
 import org.gradle.api.DefaultTask
+import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.plugins.BasePluginExtension
 import org.gradle.jvm.tasks.Jar
@@ -62,7 +63,8 @@ fun Project.configureDistribution() {
                 downloadPack(reimagENDPackUrl, project)
                 downloadPack(tartarusPackUrl, project)
                 downloadPack(defaultPackUrl, project, true)
-            } catch (_: Exception) {
+            } catch (e: Exception) {
+                throw GradleException("Failed to download default Terra config packs", e)
             }
         }
     }

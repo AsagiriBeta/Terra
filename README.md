@@ -1,101 +1,44 @@
 <img align="left" width="64" height="64" src="https://raw.githubusercontent.com/wiki/PolyhedralDev/Terra/images/terra_logo.png" alt="Terra Logo">
 
-# Terra
+# Terra（Bukkit 插件服）
 
-Terra is a modern world generation modding platform, primarily for Minecraft.
-Terra allows complete customization of world generation with an advanced API,
-tightly integrated with a powerful configuration system.
+这是 [PolyhedralDev/Terra](https://github.com/PolyhedralDev/Terra) 的 fork，只维护 **Bukkit 系插件服**：Paper、Purpur、Folia，以及兼容的 Spigot/Bukkit 核心。
 
-Terra consists of several parts:
+Fabric / Forge / Quilt / Sponge / Allay / Minestom 等模组与非插件平台已从此仓库移除。
 
-* A voxel world generation API with emphasis on configuration and extensibility
-* Several platform implementations, the layer between the API and the platform
-  it's running on.
-* An addon loader, which allows addons to interface with the Terra API in a
-  platform-agnostic setting
-* Several "core addons," which implement the "default" configurations of Terra.
-  These addons can be thought of as the config "standard library"
+当前编译目标：**Paper 1.21.11**（Purpur / Folia 等同版本可直接用同一 JAR）。世界生成 NMS 注入依赖 Paper API，**请用 Paper 或其下游（Purpur、Folia），不要用纯 CraftBukkit**。
 
-Terra currently officially supports the Fabric mod loader and the Bukkit API
-(Paper and friends). We welcome Pull Requests implementing additional platforms!
+## 下载
 
-## Downloads:
+推送到 `master` 后，GitHub Actions 会自动构建并 Release shaded 插件 JAR：
 
-* Fabric: [Modrinth](https://modrinth.com/mod/terra)
-  / [CurseForge](https://www.curseforge.com/minecraft/mc-mods/terra-world-generator)
-* Paper+ servers (Paper, Tuinity, Purpur,
-  etc): [SpigotMC](https://www.spigotmc.org/resources/85151/)
+[Releases](https://github.com/AsagiriBeta/Terra/releases)
 
-## Building and Running Terra
+把 `Terra-bukkit-*-shaded.jar` 放进 `plugins/`。主世界生成器示例：
 
-To build, simply run `./gradlew build` (`gradlew.bat build` on Windows). This
-will build all platforms, and produce JARs in `platforms/<platform>/build/libs`
+```yml
+# bukkit.yml
+worlds:
+  world:
+    generator: Terra:OVERWORLD
+```
 
-### Production JARs:
+`plugin.yml` 已声明 `folia-supported: true`。
 
-* Bukkit: `Terra-<version>-shaded.jar`
-* Fabric: `Terra-<version>-shaded-mapped.jar`
+## 构建
 
-### Building a Specific Platform
+```bash
+./gradlew :platforms:bukkit:shadowJar
+```
 
-To build a specific platform, run `gradlew :platforms:<platform>:build`.
+产物在 `platforms/bukkit/build/libs/`。
 
-JARs are produced in `platforms/<platform>/build/libs`.
+本地 Paper 测试服：
 
-### Running Minecraft in the IDE
+```bash
+./gradlew :platforms:bukkit:runServer
+```
 
-To run Minecraft with Terra in the IDE (for testing) use the following tasks:
+## 许可证
 
-* Bukkit
-    * `runServer` - Run the Paper test server with Terra installed.
-* Fabric
-    * `runClient` - Run a Minecraft Fabric client with Terra installed.
-    * `runServer` - Run a Minecraft Fabric server with Terra installed.
-
-## Contributing
-
-Contributions are welcome! If you want to see a feature in Terra, please, open
-an issue, or implement it yourself and submit a PR!
-Join the discord [here](https://discord.gg/PXUEbbF) if you would like to talk
-more about the project!
-
-## Licensing
-
-Parts of Terra are licensed under either the MIT License or the GNU General
-Public License, version 3.0.
-
-* Our API is licensed under the [MIT License](LICENSE), to ensure that everyone
-  is able to freely use it however they want.
-* Our core addons are also licensed under the [MIT License](LICENSE), to ensure
-  that people can freely use code from them to learn and make their own addons,
-  without worrying about GPL infection.
-* Our platform-agnostic implementations and platform implementations are
-  licensed under
-  the [GNU General Public License, version 3.0](common/implementation/LICENSE),
-  to ensure that they remain free software wherever they are used.
-
-If you're not sure which license a particular file is under, check:
-
-* The file's header
-* The LICENSE file in the closest parent folder of the file in question
-
-## Beta
-
-Terra is still in beta! While it is stable, it is not feature-complete. There is
-a lot to be added!
-
-## Special Thanks
-
-[![YourKit-Logo](https://www.yourkit.com/images/yklogo.png)](https://www.yourkit.com/)
-
-YourKit has granted Polyhedral Development an open-source license to their
-outstanding Java profiler, allowing us to make our software as performant as it
-can be!
-
-YourKit supports open source projects with innovative and intelligent tools for
-monitoring and profiling Java and .NET applications. YourKit is the creator of
-the
-[YourKit Java Profiler](https://www.yourkit.com/java/profiler/),
-[YourKit .NET Profiler](https://www.yourkit.com/.net/profiler/),
-and [YourKit YouMonitor](https://www.yourkit.com/youmonitor/).
-
+与上游一致：API / 核心 addon 为 MIT，平台实现为 GPLv3。

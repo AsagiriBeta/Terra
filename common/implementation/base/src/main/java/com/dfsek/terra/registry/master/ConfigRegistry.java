@@ -46,7 +46,9 @@ public class ConfigRegistry extends OpenRegistryImpl<ConfigPack> {
         Files.createDirectories(packsDirectory);
         List<Exception> failedLoads = new CopyOnWriteArrayList<>();
         try(Stream<Path> packs = Files.list(packsDirectory)) {
-            packs.parallel().forEach(path -> {
+            packs.filter(path -> Files.isDirectory(path) || path.getFileName().toString().endsWith(".zip"))
+                .parallel()
+                .forEach(path -> {
                 try {
                     ConfigPack pack = new ConfigPackImpl(path, platform);
                     registerChecked(pack.getRegistryKey(), pack);
